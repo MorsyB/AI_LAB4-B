@@ -21,6 +21,7 @@ class Agent(RoshamboPlayer):
         self.moves.append(Move(move, score))
 
     def nextMove(self):
+
         pass
 
     def getName(self):
