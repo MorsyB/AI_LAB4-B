@@ -20,6 +20,7 @@ class Agent(RoshamboPlayer):
     def storeMove(self, move, score):
         self.moves.append(Move(move, score))
 
+
     def nextMove(self):
 
         pass
