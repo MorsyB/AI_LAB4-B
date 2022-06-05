@@ -1,5 +1,5 @@
 from RoshamboPlayer import RoshamboPlayer
-
+from random import randint
 
 class Move:
     def __init__(self, move, score):
@@ -12,10 +12,11 @@ class Agent(RoshamboPlayer):
         super().__init__()
         self.moves = []
         self.trial = 1000
+        self.score=0
+        self.fitness=0
+        for i in range(1000):
+            self.moves.append(randint(0,2))
 
-    def newGame(self, trial):
-        self.moves = []
-        self.trial = trial
 
     def storeMove(self, move, score):
         self.moves.append(Move(move, score))
