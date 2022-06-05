@@ -8,14 +8,15 @@ class Tournament:
         self.maxIter = 1000
         self.participants = []
         self.score = []
+        self.finalScore = []
         self.population = []
         self.buffer = []
         self.popsize = 2048
         self.addPlayers()
         self.matchHistory = []
         self.start()
-        self.init_population()
-        # print(self.score)
+        #self.init_population()
+        print(self.finalScore)
 
     def init_population(self):
         for i in range(self.popsize):
@@ -51,12 +52,20 @@ class Tournament:
         self.participants.append(SwitchALot())
         for _ in range(len(self.participants)):
             self.score.append(0)
+            self.finalScore.append(0)
 
     def start(self):
         for player1 in range(len(self.participants) - 1):
             player1History = []
             for player2 in range(player1 + 1, len(self.participants)):
                 finalScore = self.startGame(player1, player2)
+                if finalScore == 1:
+                    self.finalScore[player1] += 1
+                    self.finalScore[player2] -= 1
+                else:
+                    self.finalScore[player2] += 1
+                    self.finalScore[player1] -= 1
+
                 player1History.append(finalScore)
             self.matchHistory.append(player1History)
 
@@ -137,9 +146,9 @@ class Tournament:
             self.sort_by_fitness()
             if self.population[0].fitness > best.fitness:
                 best = self.population[0]
-            self.mutualism_phase(best)
-            self.Commensalism_phase()
-            self.paratisim_phase()
+            #self.mutualism_phase(best)
+            #self.Commensalism_phase()
+            #self.paratisim_phase()
 
     def fitness_sort(self, x):
         return x.fitness
