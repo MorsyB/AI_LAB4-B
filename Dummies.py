@@ -40,7 +40,7 @@ class AntiFlat(RoshamboPlayer):
             return self.ROCK
 
         if self.moves[self.PAPER] == self.moves[self.SCISSORS] and self.moves[self.PAPER] < self.moves[self.ROCK]:
-            return self.moves[self.SCISSORS]
+            return self.SCISSORS
 
         return random.randrange(3)
 

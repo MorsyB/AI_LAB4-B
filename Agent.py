@@ -20,10 +20,10 @@ class Agent(RoshamboPlayer):
     def storeMove(self, move, score):
         self.moves.append(Move(move, score))
 
-
     def nextMove(self):
-
-        pass
+        rsp = [0] * 3
+        for move in self.moves:
+            rsp[move.move] += 1
 
     def getName(self):
         return "My Agent"
