@@ -5,6 +5,9 @@ from random import uniform
 
 class Tournament:
     def __init__(self):
+        self.myarr=[]
+        for i in range(1000):
+            self.myarr.append(i)
         self.maxIter = 1000
         self.participants = []
         self.score = []
@@ -134,6 +137,56 @@ class Tournament:
             mutual_vector = (self.population[i].moves + self.population[index].moves) / 2
             newvec1 = self.population[i].moves + uniform(0, 1) * (best.moves - mutual_vector * BF1)
             newvec2 = self.population[index].moves + uniform(0, 1) * (best.moves - mutual_vector * BF2)
+            finalscore=0
+            my_agent = Agent()
+            my_agent.moves = newvec1
+            for player in range(len(self.participants)):
+                finalscore += self.startGame2(my_agent, player)
+            if finalscore>self.population[i].fitness:
+                self.population[i].moves=newvec1
+                self.population[i].fitness=finalscore
+            finalscore = 0
+            my_agent2 = Agent()
+            my_agent2.moves = newvec2
+            for player in range(len(self.participants)):
+                finalscore += self.startGame2(my_agent2, player)
+            if finalscore > self.population[index].fitness:
+                self.population[i].moves = newvec1
+                self.population[i].fitness = finalscore
+
+    def Commensalism_phase(self,best):
+        for i in range(self.popsize):
+            index = randint(0, self.popsize)
+            while index == i:
+                index = randint(0, self.popsize)
+        newvec= self.population[i].moves + random.choice([-1,1])*(best.moves-self.population[index].moves)
+        my_agent=Agent()
+        my_agent.moves=newvec
+        finalscore = 0
+        for player in range(len(self.participants)):
+            finalscore += self.startGame2(my_agent, player)
+        if finalscore > self.population[i].fitness:
+            self.population[i].moves = newvec
+            self.population[i].fitness = finalscore
+
+
+    def paratisim_phase(self):
+        for i in range(self.popsize):
+            index = randint(0, self.popsize)
+            while index == i:
+                index = randint(0, self.popsize)
+            sampled_list = random.sample(self.myarr, 50)
+            my_agent = Agent()
+            my_agent.moves = self.population[index].moves
+            for num in sampled_list:
+                my_agent.moves[num]= randint(0,2)
+            finalscore=0
+            for player in range(len(self.participants)):
+                finalscore += self.startGame2(my_agent, player)
+            if finalscore > self.population[i].fitness:
+                self.population[i].moves = my_agent.moves
+                self.population[i].fitness = finalscore
+
 
     def run(self):
         self.Agents_game()
