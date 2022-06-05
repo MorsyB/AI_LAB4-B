@@ -188,6 +188,12 @@ class Tournament:
                 self.population[i].fitness = finalscore
 
 
+    def fitness_sort(self, x):
+        return x.fitness
+
+    def sort_by_fitness(self):
+        self.population.sort(key=self.fitness_sort, reverse=True)
+
     def run(self):
         self.Agents_game()
         self.calc_fitness()
@@ -203,8 +209,4 @@ class Tournament:
             #self.Commensalism_phase()
             #self.paratisim_phase()
 
-    def fitness_sort(self, x):
-        return x.fitness
 
-    def sort_by_fitness(self):
-        self.population.sort(key=self.fitness_sort, reverse=True)
