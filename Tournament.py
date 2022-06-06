@@ -1,6 +1,7 @@
 from Dummies import *
 from Agent import *
 from random import uniform
+from math import *
 
 
 class Tournament:
@@ -14,11 +15,12 @@ class Tournament:
         self.finalScore = []
         self.population = []
         self.buffer = []
-        self.popsize = 2048
+        self.popsize = 50
         self.addPlayers()
         self.matchHistory = []
         self.start()
-        #self.init_population()
+        self.init_population()
+        self.run()
         print(self.finalScore)
 
     def init_population(self):
@@ -129,14 +131,23 @@ class Tournament:
 
     def mutualism_phase(self, best):
         for i in range(self.popsize):
-            index = randint(0, self.popsize)
+            index = randint(0, self.popsize-1)
             while index == i:
-                index = randint(0, self.popsize)
+                index = randint(0, self.popsize-1)
             BF1 = randint(1, 2)
             BF2 = randint(1, 2)
-            mutual_vector = (self.population[i].moves + self.population[index].moves) / 2
-            newvec1 = self.population[i].moves + uniform(0, 1) * (best.moves - mutual_vector * BF1)
-            newvec2 = self.population[index].moves + uniform(0, 1) * (best.moves - mutual_vector * BF2)
+            mutual_vector=[]
+            for j in range(len(self.population[i].moves)):
+                num= int((self.population[i].moves[j]+self.population[index].moves[j])/2)
+                mutual_vector.append(num)
+            newvec1,newvec2=[],[]
+
+            for j in range(len(self.population[i].moves)):
+                num1= abs(int(self.population[i].moves[j]+uniform(0,1)*(best.moves[j]- mutual_vector[j]*BF1)))
+                num2 = abs(int(self.population[index].moves[j] + uniform(0, 1) * (best.moves[j] - mutual_vector[j] * BF2)))
+                newvec1.append(num1)
+                newvec2.append(num2)
+
             finalscore=0
             my_agent = Agent()
             my_agent.moves = newvec1
@@ -145,6 +156,7 @@ class Tournament:
             if finalscore>self.population[i].fitness:
                 self.population[i].moves=newvec1
                 self.population[i].fitness=finalscore
+
             finalscore = 0
             my_agent2 = Agent()
             my_agent2.moves = newvec2
@@ -154,27 +166,34 @@ class Tournament:
                 self.population[i].moves = newvec1
                 self.population[i].fitness = finalscore
 
+
     def Commensalism_phase(self,best):
         for i in range(self.popsize):
-            index = randint(0, self.popsize)
+            index = randint(0, self.popsize-1)
             while index == i:
-                index = randint(0, self.popsize)
-        newvec= self.population[i].moves + random.choice([-1,1])*(best.moves-self.population[index].moves)
-        my_agent=Agent()
-        my_agent.moves=newvec
-        finalscore = 0
-        for player in range(len(self.participants)):
-            finalscore += self.startGame2(my_agent, player)
-        if finalscore > self.population[i].fitness:
-            self.population[i].moves = newvec
-            self.population[i].fitness = finalscore
+                index = randint(0, self.popsize-1)
+            newvec = []
+            for j in range(len(self.population[i].moves)):
+                num =abs(int(self.population[i].moves[j] + random.choice([-1, 1]) * (
+                            best.moves[j] - self.population[index].moves[j])))
+                newvec.append(num)
+            my_agent = Agent()
+            my_agent.moves = newvec
+            finalscore = 0
+            for player in range(len(self.participants)):
+                finalscore += self.startGame2(my_agent, player)
+            if finalscore > self.population[i].fitness:
+                self.population[i].moves = newvec
+                self.population[i].fitness = finalscore
+
+
 
 
     def paratisim_phase(self):
         for i in range(self.popsize):
-            index = randint(0, self.popsize)
+            index = randint(0, self.popsize-1)
             while index == i:
-                index = randint(0, self.popsize)
+                index = randint(0, self.popsize-1)
             sampled_list = random.sample(self.myarr, 50)
             my_agent = Agent()
             my_agent.moves = self.population[index].moves
@@ -194,19 +213,26 @@ class Tournament:
     def sort_by_fitness(self):
         self.population.sort(key=self.fitness_sort, reverse=True)
 
+    def print_best(self):
+        print("sol = ", self.population[0].moves)
+        print('Fitness = ', self.population[0].fitness)
+        print()
+
     def run(self):
         self.Agents_game()
         self.calc_fitness()
         self.sort_by_fitness()
         best = self.population[0]
         for i in range(self.maxIter):
-            self.Agents_game()
-            self.calc_fitness()
             self.sort_by_fitness()
-            if self.population[0].fitness > best.fitness:
+            self.print_best()
+            if self.population[0].fitness < best.fitness:
                 best = self.population[0]
-            #self.mutualism_phase(best)
-            #self.Commensalism_phase()
-            #self.paratisim_phase()
+            self.mutualism_phase(best)
+            #print("passed")
+            self.Commensalism_phase(best)
+            #print("passed2")
+            self.paratisim_phase()
+            #print("passed3")
 
 
