@@ -1,4 +1,7 @@
+import time
+
 from RoshamboPlayer import RoshamboPlayer
+from iocaine import iocaine_agent
 
 
 class Urza(RoshamboPlayer):
@@ -41,21 +44,29 @@ class megaHal(RoshamboPlayer):
         pass
 
 
-class Greenberg(RoshamboPlayer):
+class Observation:
     def __init__(self):
-        pass
+        self.step = 0
+        self.lastOpponentAction = 0
+
+
+class Iocaine(RoshamboPlayer):
+    def __init__(self):
+        super().__init__()
+        self.observe = Observation()
 
     def newGame(self, trial):
-        pass
+        self.observe = Observation()
 
     def storeMove(self, move, score):
-        pass
+        self.observe.step += 1
+        self.observe.lastOpponentAction = move
 
     def nextMove(self):
-        pass
+        return iocaine_agent(self.observe, 0)
 
     def getName(self):
-        pass
+        return "iocaine"
 
     def getAuthor(self):
-        pass
+        return "Robby"
