@@ -57,6 +57,7 @@ class Tournament:
         self.participants.append(Switch())
         self.participants.append(SwitchALot())
         self.participants.append(Iocaine())
+        self.participants.append(Greenberg())
         for _ in range(len(self.participants)):
             self.score.append(0)
             self.finalScore.append(0)

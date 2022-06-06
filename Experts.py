@@ -1,5 +1,5 @@
 import time
-
+from Greenberg import *
 from RoshamboPlayer import RoshamboPlayer
 from iocaine import iocaine_agent
 
@@ -70,3 +70,26 @@ class Iocaine(RoshamboPlayer):
 
     def getAuthor(self):
         return "Robby"
+
+
+class Greenberg(RoshamboPlayer):
+    def __init__(self):
+        super().__init__()
+        self.opp_moves = []
+        self.moves = 0
+
+    def newGame(self, trial):
+        self.opp_moves = []
+        self.moves = 0
+
+    def storeMove(self, move, score):
+        self.moves += 1
+
+    def nextMove(self):
+        return player(self.moves, self.opp_moves)
+
+    def getName(self):
+        return "Greenberg"
+
+    def getAuthor(self):
+        return "Samer El\"GAY\""
