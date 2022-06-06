@@ -1,3 +1,6 @@
+import statistics
+
+import Graph
 from Dummies import *
 from Agent import *
 from random import uniform
@@ -16,13 +19,14 @@ class Tournament:
         self.finalScore = []
         self.population = []
         self.buffer = []
-        self.popsize = 2048
+        self.popsize = 30
         self.addPlayers()
         self.matchHistory = []
         self.start()
         self.init_population()
         self.run()
-        print(self.finalScore)
+        for i in range(len(self.participants)):
+            print(self.participants[i].getName(), " Score :", self.finalScore[i])
 
     def init_population(self):
         for i in range(self.popsize):
@@ -56,7 +60,7 @@ class Tournament:
         self.participants.append(Rotate())
         self.participants.append(Switch())
         self.participants.append(SwitchALot())
-        self.participants.append(Iocaine())
+        # self.participants.append(Iocaine())
         self.participants.append(Greenberg())
         for _ in range(len(self.participants)):
             self.score.append(0)
@@ -232,3 +236,37 @@ class Tournament:
             self.mutualism_phase(best)
             self.Commensalism_phase(best)
             self.paratisim_phase()
+
+        self.analGame(best)
+
+    def analGame(self, player1):
+        print("My Agent results:")
+        avgs = []
+        for player2 in range(len(self.participants)):
+            scores = []
+            for k in range(10):
+                score1, score2 = 0, 0
+                draw = 0
+                self.participants[player2].newGame(1000)
+                for i in range(1000):
+                    move1 = player1.moves[i]
+                    move2 = self.participants[player2].nextMove()
+                    if (move1 == 0 and move2 == 1) or (move1 == 1 and move2 == 2) or (move1 == 2 and move2 == 0):
+                        score2 += 1
+                        self.participants[player2].storeMove(move2, 1)
+                    elif (move2 == 0 and move1 == 1) or (move2 == 1 and move1 == 2) or (move2 == 2 and move1 == 0):
+                        score1 += 1
+                        self.participants[player2].storeMove(move2, -1)
+                    else:
+                        draw += 1
+                        self.participants[player2].storeMove(move2, 0)
+                #print(score1, draw, 1000 - draw - score1)
+                scores.append(score1)
+            avg = 0
+            for score in scores:
+                avg += score
+            avg /= len(scores)
+            avgs.append(avg)
+            std = statistics.stdev(scores)
+            print("Opp :", self.participants[player2].getName(), "||  Win Avg :", avg, "||  Win Stdev :", std)
+        Graph.draw(avgs, "My agent results")

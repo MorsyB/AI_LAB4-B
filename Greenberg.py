@@ -20,6 +20,8 @@ def player(my_moves, opp_moves):
     wins_with = (1, 2, 0)  # superior
     best_without = (2, 0, 1)  # inferior
     last_move = True
+    if last_move:
+        return next_move()
     lengths = (10, 20, 30, 40, 49, 0)
     p_random = random.choice([0, 1, 2])  # called 'guess' in iocaine
 
@@ -32,9 +34,6 @@ def player(my_moves, opp_moves):
 
     def max_index(values):
         return max(enumerate(values), key=itemgetter(1))[0]
-
-    if last_move:
-        return next_move()
 
     def find_best_prediction(l):  # l = len
         bs = -TRIALS
