@@ -2,47 +2,8 @@ import time
 from Greenberg import *
 from RoshamboPlayer import RoshamboPlayer
 from iocaine import iocaine_agent
-
-
-class Urza(RoshamboPlayer):
-    def __init__(self):
-        pass
-
-    def newGame(self, trial):
-        pass
-
-    def storeMove(self, move, score):
-        pass
-
-    def nextMove(self):
-        pass
-
-    def getName(self):
-        pass
-
-    def getAuthor(self):
-        pass
-
-
-class megaHal(RoshamboPlayer):
-    def __init__(self):
-        pass
-
-    def newGame(self, trial):
-        pass
-
-    def storeMove(self, move, score):
-        pass
-
-    def nextMove(self):
-        pass
-
-    def getName(self):
-        pass
-
-    def getAuthor(self):
-        pass
-
+from Urza import *
+from Megahal import *
 
 class Observation:
     def __init__(self):
@@ -92,4 +53,48 @@ class Greenberg(RoshamboPlayer):
         return "Greenberg"
 
     def getAuthor(self):
-        return "Samer El\"GAY\""
+        return "Samer"
+
+
+class Urza(RoshamboPlayer):
+    def __init__(self):
+        super().__init__()
+        self.observe = Observation()
+
+    def newGame(self, trial):
+        self.observe = Observation()
+
+    def storeMove(self, move, score):
+        self.observe.step += 1
+        self.observe.lastOpponentAction = move
+
+    def nextMove(self):
+        return urza_agent(self.observe, 0)
+
+    def getName(self):
+        return "Urza"
+
+    def getAuthor(self):
+        return "Urza Auther"
+
+
+class MegaHal(RoshamboPlayer):
+    def __init__(self):
+        super().__init__()
+        self.observe = Observation()
+
+    def newGame(self, trial):
+        self.observe = Observation()
+
+    def storeMove(self, move, score):
+        self.observe.step += 1
+        self.observe.lastOpponentAction = move
+
+    def nextMove(self):
+        return megahal_agent(self.observe, 0)
+
+    def getName(self):
+        return "MegaHal"
+
+    def getAuthor(self):
+        return "Mega"

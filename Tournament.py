@@ -27,6 +27,7 @@ class Tournament:
         self.run()
         for i in range(len(self.participants)):
             print(self.participants[i].getName(), " Score :", self.finalScore[i])
+        print("My-Agent Score :", len(self.finalScore))
 
     def init_population(self):
         for i in range(self.popsize):
@@ -40,7 +41,6 @@ class Tournament:
             for player in range(len(self.participants)):
                 finalscore += self.startGame2(self.population[i], player)
             self.population[i].score = finalscore
-            # print(finalscore)
 
     def calc_fitness(self):
         for i in range(self.popsize):
@@ -62,6 +62,8 @@ class Tournament:
         self.participants.append(SwitchALot())
         # self.participants.append(Iocaine())
         self.participants.append(Greenberg())
+        self.participants.append(Urza())
+        self.participants.append(MegaHal())
         for _ in range(len(self.participants)):
             self.score.append(0)
             self.finalScore.append(0)
@@ -237,9 +239,9 @@ class Tournament:
             self.Commensalism_phase(best)
             self.paratisim_phase()
 
-        self.analGame(best)
+        self.finalGame(best)
 
-    def analGame(self, player1):
+    def finalGame(self, player1):
         print("My Agent results:")
         avgs = []
         for player2 in range(len(self.participants)):
@@ -260,8 +262,8 @@ class Tournament:
                     else:
                         draw += 1
                         self.participants[player2].storeMove(move2, 0)
-                #print(score1, draw, 1000 - draw - score1)
-                scores.append(score1+draw)
+                # print(score1, draw, 1000 - draw - score1)
+                scores.append(score1 + draw)
             avg = 0
             for score in scores:
                 avg += score
@@ -270,3 +272,4 @@ class Tournament:
             std = statistics.stdev(scores)
             print("Opp :", self.participants[player2].getName(), "||  Win Avg :", avg, "||  Win Stdev :", std)
             Graph.draw(scores, self.participants[player2].getName())
+        print()
