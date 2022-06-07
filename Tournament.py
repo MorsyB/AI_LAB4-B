@@ -261,7 +261,7 @@ class Tournament:
                         draw += 1
                         self.participants[player2].storeMove(move2, 0)
                 #print(score1, draw, 1000 - draw - score1)
-                scores.append(score1)
+                scores.append(score1+draw)
             avg = 0
             for score in scores:
                 avg += score
@@ -269,4 +269,4 @@ class Tournament:
             avgs.append(avg)
             std = statistics.stdev(scores)
             print("Opp :", self.participants[player2].getName(), "||  Win Avg :", avg, "||  Win Stdev :", std)
-        Graph.draw(avgs, "My agent results")
+            Graph.draw(scores, self.participants[player2].getName())
