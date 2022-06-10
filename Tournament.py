@@ -25,9 +25,8 @@ class Tournament:
         self.start()
         self.init_population()
         self.run()
-        for i in range(len(self.participants)):
-            print(self.participants[i].getName(), " Score :", self.finalScore[i])
-        print("My-Agent Score :", len(self.finalScore))
+        self.print_sort()
+
 
     def init_population(self):
         for i in range(self.popsize):
@@ -61,9 +60,9 @@ class Tournament:
         self.participants.append(Switch())
         self.participants.append(SwitchALot())
         # self.participants.append(Iocaine())
-        self.participants.append(Greenberg())
-        self.participants.append(Urza())
-        self.participants.append(MegaHal())
+        #self.participants.append(Greenberg())
+        #self.participants.append(Urza())
+        #self.participants.append(MegaHal())
         for _ in range(len(self.participants)):
             self.score.append(0)
             self.finalScore.append(0)
@@ -273,3 +272,16 @@ class Tournament:
             print("Opp :", self.participants[player2].getName(), "||  Win Avg :", avg, "||  Win Stdev :", std)
             Graph.draw(scores, self.participants[player2].getName())
         print()
+
+    def print_sort(self):
+        seen = []
+        print("My-Agent Score :", len(self.finalScore))
+        for i in range(len(self.participants)):
+            max = -200
+            index = -1
+            for j in range(len(self.participants)):
+                if self.finalScore[j] > max and j not in seen:
+                    max = self.finalScore[j]
+                    index = j
+            print(self.participants[index].getName(), " Score :", self.finalScore[index])
+            seen.append(index)
